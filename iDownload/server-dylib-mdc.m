@@ -164,6 +164,7 @@ void printHelp(FILE *f) {
     fprintf(f, "open <bundleid>:          Launch a app\r\n");
     fprintf(f, "sb_ext_consume <token>:   Consume a sandbox extension\r\n");
     fprintf(f, "grant_full_disk_access:   Grant full disk access using MacDirtyCow\r\n");
+    fprintf(f, "xpc_crasher <process>:              Crash a process\r\n");
     fprintf(f, "help:                     Print this help\r\n");
     fprintf(f, "\r\n");
 }
@@ -474,6 +475,14 @@ void handleConnection(int socket) {
             }
         } else if (strcmp(cmd, "grant_full_disk_access") == 0) {
             grant_full_disk_access(f);
+        } else if (strcmp(cmd, "xpc_crasher") == 0) {
+            char *param = getParameter(cmdBuffer, 1);
+            if (param) {
+                fprintf(f, "Crashing process", param, "...\r\n")
+                xpc_crasher(param)
+            } else {
+                fprintf(f, "Usage: xpc_crasher <process>\r\n")
+            }
         } else {
             fprintf(f, "Unknown command %s!\r\n", cmdBuffer);
         }
